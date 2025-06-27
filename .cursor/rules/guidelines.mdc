@@ -1,0 +1,826 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+# Cursor YOLO Mode Rules - Konversly AI Landing Page
+
+## 🚀 YOLO Mode Philosophy
+> Move fast, build beautifully, ship confidently. These rules enable rapid development while maintaining enterprise-grade quality.
+
+---
+
+## 🎯 Core Development Principles
+
+### Rule 1: TypeScript-First, Always
+```typescript
+// ✅ ALWAYS DO THIS
+interface ComponentProps {
+  variant?: 'primary' | 'secondary';
+  onClick?: () => void;
+  children: React.ReactNode;
+}
+
+const Component: React.FC<ComponentProps> = ({ variant = 'primary', onClick, children }) => {
+  // Implementation
+};
+
+// ❌ NEVER DO THIS
+const Component = ({ variant, onClick, children }) => {
+  // No TypeScript interfaces
+};
+```
+
+### Rule 2: Instant Performance Optimization
+```typescript
+// ✅ ALWAYS: Lazy load non-critical components
+const VoiceDemo = lazy(() => import('./voice-demo'));
+const AIChat = lazy(() => import('./ai-chat'));
+
+// ✅ ALWAYS: Use React.memo for expensive components
+const ExpensiveComponent = React.memo(({ data }) => {
+  // Component logic
+});
+
+// ✅ ALWAYS: Optimize images
+<Image
+  src="/hero-bg.jpg"
+  alt="Hero background"
+  width={1920}
+  height={1080}
+  priority
+  quality={85}
+  placeholder="blur"
+/>
+```
+
+### Rule 3: Accessibility by Default
+```typescript
+// ✅ ALWAYS: Include ARIA and semantic HTML
+<button
+  className="..."
+  onClick={handleClick}
+  aria-label="Start free trial"
+  aria-describedby="trial-description"
+>
+  Start Free Trial
+</button>
+
+<section aria-labelledby="features-heading">
+  <h2 id="features-heading">Key Features</h2>
+  {/* Content */}
+</section>
+```
+
+---
+
+## 🎨 Design System Enforcement
+
+### Rule 4: Use Design Tokens ONLY
+```typescript
+// ✅ ALWAYS: Use design system colors
+const colors = {
+  primary: {
+    900: '#0A0A23',
+    700: '#1E1B4B',
+    500: '#6366F1',
+    300: '#A5B4FC'
+  },
+  accent: {
+    aurora1: '#FF6B9D',
+    aurora2: '#4ECDC4',
+    aurora3: '#FFE66D'
+  }
+} as const;
+
+// ✅ ALWAYS: Use Tailwind classes from design system
+className="bg-primary-900 text-primary-300 hover:bg-primary-700"
+
+// ❌ NEVER: Custom colors outside system
+className="bg-[#ff0000] text-[#00ff00]"
+```
+
+### Rule 5: Animation Standards
+```typescript
+// ✅ ALWAYS: Use consistent timing and easing
+const motionConfig = {
+  duration: 0.3,
+  ease: "easeOutQuart",
+  stagger: 0.1
+};
+
+// ✅ ALWAYS: Framer Motion for complex animations
+<motion.div
+  initial={{ opacity: 0, y: 20 }}
+  animate={{ opacity: 1, y: 0 }}
+  transition={{ duration: 0.3, ease: "easeOutQuart" }}
+>
+  Content
+</motion.div>
+
+// ✅ ALWAYS: CSS transitions for simple hover states
+className="transition-all duration-300 ease-out-quart hover:scale-105"
+```
+
+---
+
+## 🧩 Component Architecture
+
+### Rule 6: Component Structure Template
+```typescript
+/**
+ * Component: [ComponentName]
+ * Description: [Brief description]
+ * Usage: <ComponentName prop1="value" />
+ */
+
+import { cn } from '@/lib/utils';
+import { motion } from 'framer-motion';
+
+interface ComponentNameProps {
+  className?: string;
+  variant?: 'default' | 'large';
+  children?: React.ReactNode;
+}
+
+const ComponentName: React.FC<ComponentNameProps> = ({
+  className,
+  variant = 'default',
+  children,
+  ...props
+}) => {
+  return (
+    <motion.div
+      className={cn(
+        // Base styles
+        "relative flex items-center justify-center",
+        // Variant styles
+        variant === 'large' && "p-8 text-lg",
+        variant === 'default' && "p-4 text-base",
+        // Custom className
+        className
+      )}
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      {...props}
+    >
+      {children}
+    </motion.div>
+  );
+};
+
+export default ComponentName;
+```
+
+### Rule 7: Error Boundaries Everywhere
+```typescript
+// ✅ ALWAYS: Wrap components in error boundaries
+import { ErrorBoundary } from 'react-error-boundary';
+
+const ErrorFallback = ({ error, resetErrorBoundary }) => (
+  <div className="p-4 bg-red-50 border border-red-200 rounded-lg">
+    <h2 className="text-lg font-semibold text-red-800">Something went wrong</h2>
+    <p className="text-red-600">{error.message}</p>
+    <button onClick={resetErrorBoundary} className="mt-2 px-4 py-2 bg-red-600 text-white rounded">
+      Try again
+    </button>
+  </div>
+);
+
+// Wrap all major components
+<ErrorBoundary FallbackComponent={ErrorFallback}>
+  <Hero />
+</ErrorBoundary>
+```
+
+---
+
+## 🔥 Rapid Development Shortcuts
+
+### Rule 8: Component Generation Templates
+```typescript
+// 🚀 YOLO SHORTCUT: Use these templates for instant component creation
+
+// Basic Component Template
+const COMPONENT_TEMPLATE = `
+interface Props {
+  children: React.ReactNode;
+  className?: string;
+}
+
+const Component: React.FC<Props> = ({ children, className }) => (
+  <div className={cn("", className)}>
+    {children}
+  </div>
+);
+`;
+
+// Section Component Template
+const SECTION_TEMPLATE = `
+interface Props {
+  id?: string;
+  className?: string;
+  children: React.ReactNode;
+}
+
+const Section: React.FC<Props> = ({ id, className, children }) => (
+  <section id={id} className={cn("py-24", className)}>
+    <div className="container mx-auto px-4">
+      {children}
+    </div>
+  </section>
+);
+`;
+
+// Hook Template
+const HOOK_TEMPLATE = `
+interface UseHookReturn {
+  data: any;
+  loading: boolean;
+  error: Error | null;
+}
+
+const useHook = (): UseHookReturn => {
+  const [data, setData] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<Error | null>(null);
+
+  return { data, loading, error };
+};
+`;
+```
+
+### Rule 9: Instant Styling Classes
+```typescript
+// 🚀 YOLO SHORTCUTS: Pre-defined class combinations
+
+const YOLO_CLASSES = {
+  // Containers
+  container: "container mx-auto px-4",
+  section: "py-24",
+  
+  // Cards
+  glassCard: "bg-white/10 backdrop-blur-xl border border-white/20 rounded-2xl p-6",
+  modernCard: "bg-gradient-to-br from-slate-900 to-slate-800 rounded-2xl p-8 shadow-2xl",
+  
+  // Buttons
+  primaryBtn: "bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white px-6 py-3 rounded-lg font-semibold transition-all duration-300",
+  secondaryBtn: "bg-white/10 backdrop-blur border border-white/20 hover:bg-white/20 text-white px-6 py-3 rounded-lg font-semibold transition-all duration-300",
+  
+  // Text
+  heroTitle: "text-4xl md:text-6xl font-bold bg-gradient-to-r from-white to-blue-200 bg-clip-text text-transparent",
+  sectionTitle: "text-3xl md:text-4xl font-bold text-white mb-6",
+  
+  // Layouts
+  centerFlex: "flex items-center justify-center",
+  spaceBetween: "flex items-center justify-between",
+  gridCols: "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8",
+  
+  // Animations
+  fadeIn: "opacity-0 animate-fade-in",
+  slideUp: "translate-y-10 opacity-0 animate-slide-up",
+  scaleIn: "scale-95 opacity-0 animate-scale-in"
+};
+```
+
+---
+
+## 🤖 AI Integration Rules
+
+### Rule 10: AI Component Standards
+```typescript
+// ✅ ALWAYS: Use these patterns for AI components
+
+// OpenAI Chat Integration
+const useAIChat = (config: AIConfig) => {
+  const [messages, setMessages] = useState<Message[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
+  
+  const sendMessage = useCallback(async (content: string) => {
+    setIsLoading(true);
+    try {
+      const response = await fetch('/api/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ message: content, config })
+      });
+      
+      if (!response.ok) throw new Error('Failed to send message');
+      
+      const data = await response.json();
+      setMessages(prev => [...prev, data.message]);
+    } catch (error) {
+      console.error('Chat error:', error);
+      // Handle error appropriately
+    } finally {
+      setIsLoading(false);
+    }
+  }, [config]);
+  
+  return { messages, sendMessage, isLoading };
+};
+
+// Vapi Voice Integration
+const useVapiVoice = () => {
+  const [isListening, setIsListening] = useState(false);
+  const [transcript, setTranscript] = useState('');
+  
+  const startListening = useCallback(() => {
+    // Vapi implementation
+    setIsListening(true);
+  }, []);
+  
+  return { isListening, transcript, startListening };
+};
+```
+
+### Rule 11: Magic MCP Integration
+```typescript
+// ✅ ALWAYS: Use Magic MCP for enhanced UI generation
+const withMagicMCP = (Component: React.ComponentType) => {
+  return React.forwardRef((props, ref) => {
+    const enhancedProps = useMagicMCP(props);
+    return <Component {...enhancedProps} ref={ref} />;
+  });
+};
+
+// Usage
+const EnhancedButton = withMagicMCP(Button);
+```
+
+---
+
+## 📱 Responsive Design Rules
+
+### Rule 12: Mobile-First Breakpoints
+```typescript
+// ✅ ALWAYS: Use these breakpoint patterns
+const BREAKPOINTS = {
+  // Mobile-first approach
+  base: "...", // 0px and up
+  sm: "sm:...", // 640px and up
+  md: "md:...", // 768px and up
+  lg: "lg:...", // 1024px and up
+  xl: "xl:...", // 1280px and up
+  "2xl": "2xl:..." // 1536px and up
+};
+
+// Example usage
+className="text-base sm:text-lg md:text-xl lg:text-2xl"
+className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3"
+className="p-4 md:p-6 lg:p-8"
+```
+
+### Rule 13: Container Queries Ready
+```typescript
+// ✅ FUTURE-PROOF: Use container queries where beneficial
+<div className="@container">
+  <div className="@sm:flex @md:grid @lg:grid-cols-2">
+    Content adapts to container size
+  </div>
+</div>
+```
+
+---
+
+## 🧪 Testing & Quality Assurance
+
+### Rule 14: Testing Templates
+```typescript
+// ✅ ALWAYS: Include these test patterns
+
+// Component Test Template
+import { render, screen, userEvent } from '@testing-library/react';
+import { Component } from './component';
+
+describe('Component', () => {
+  it('renders correctly', () => {
+    render(<Component />);
+    expect(screen.getByRole('button')).toBeInTheDocument();
+  });
+  
+  it('handles user interaction', async () => {
+    const handleClick = jest.fn();
+    render(<Component onClick={handleClick} />);
+    
+    await userEvent.click(screen.getByRole('button'));
+    expect(handleClick).toHaveBeenCalled();
+  });
+  
+  it('is accessible', async () => {
+    const { container } = render(<Component />);
+    const results = await axe(container);
+    expect(results).toHaveNoViolations();
+  });
+});
+
+// Hook Test Template
+import { renderHook, act } from '@testing-library/react';
+import { useCustomHook } from './use-custom-hook';
+
+describe('useCustomHook', () => {
+  it('returns initial state', () => {
+    const { result } = renderHook(() => useCustomHook());
+    expect(result.current.loading).toBe(false);
+  });
+});
+```
+
+### Rule 15: Error Handling Patterns
+```typescript
+// ✅ ALWAYS: Use these error handling patterns
+
+// API Error Handling
+const handleApiError = (error: unknown) => {
+  if (error instanceof Error) {
+    console.error('API Error:', error.message);
+    toast.error(error.message);
+  } else {
+    console.error('Unknown error:', error);
+    toast.error('An unexpected error occurred');
+  }
+};
+
+// Component Error Handling
+const ComponentWithErrorHandling = () => {
+  const [error, setError] = useState<Error | null>(null);
+  
+  if (error) {
+    return <ErrorFallback error={error} />;
+  }
+  
+  return (
+    <div>
+      {/* Component content */}
+    </div>
+  );
+};
+```
+
+---
+
+## 🚀 Performance Optimization Rules
+
+### Rule 16: Bundle Optimization
+```typescript
+// ✅ ALWAYS: Optimize imports
+// Good: Named imports
+import { Button } from '@/components/ui/button';
+import { cn } from '@/lib/utils';
+
+// Bad: Default imports of large libraries
+import * as lodash from 'lodash';
+
+// Good: Specific imports
+import { debounce } from 'lodash/debounce';
+
+// ✅ ALWAYS: Dynamic imports for large components
+const HeavyComponent = lazy(() => import('./heavy-component'));
+const VoiceDemo = lazy(() => import('./voice-demo'));
+```
+
+### Rule 17: Image Optimization
+```typescript
+// ✅ ALWAYS: Use Next.js Image with optimization
+<Image
+  src="/hero-image.jpg"
+  alt="Descriptive alt text"
+  width={1920}
+  height={1080}
+  priority={isAboveFold}
+  quality={85}
+  placeholder="blur"
+  blurDataURL="data:image/jpeg;base64,..."
+  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+/>
+```
+
+---
+
+## 🎯 File Organization Rules
+
+### Rule 18: File Naming Convention
+```
+components/
+├── ui/                    # shadcn/ui components (generated)
+├── layout/               # Layout components
+│   ├── header.tsx        # PascalCase for components
+│   ├── footer.tsx
+│   └── navigation.tsx
+├── sections/             # Page sections
+│   ├── hero.tsx
+│   ├── features.tsx
+│   └── pricing.tsx
+└── interactive/          # Interactive elements
+    ├── ai-chat.tsx
+    ├── voice-demo.tsx
+    └── magic-mcp.tsx
+
+hooks/
+├── use-ai-chat.ts        # kebab-case for hooks
+├── use-voice-ai.ts
+└── use-analytics.ts
+
+lib/
+├── utils.ts              # kebab-case for utilities
+├── constants.ts
+└── validations.ts
+```
+
+### Rule 19: Import Organization
+```typescript
+// ✅ ALWAYS: Organize imports in this order
+
+// 1. React imports
+import React, { useState, useEffect, useCallback } from 'react';
+
+// 2. Third-party imports
+import { motion, AnimatePresence } from 'framer-motion';
+import { Button } from '@/components/ui/button';
+
+// 3. Internal imports
+import { cn } from '@/lib/utils';
+import { useAIChat } from '@/hooks/use-ai-chat';
+
+// 4. Type imports (separate)
+import type { ComponentProps } from '@/types/components';
+```
+
+---
+
+## 🔧 Development Workflow Rules
+
+### Rule 20: Git Commit Conventions
+```bash
+# ✅ ALWAYS: Use conventional commits
+feat: add voice demo modal with vapi integration
+fix: resolve hero animation performance issue
+refactor: optimize ai chat component bundle size
+docs: update cursor rules documentation
+test: add accessibility tests for pricing section
+perf: implement lazy loading for heavy components
+style: update button hover animations
+```
+
+### Rule 21: Code Review Checklist
+```markdown
+## Pre-Commit Checklist
+- [ ] TypeScript interfaces defined
+- [ ] Accessibility attributes added
+- [ ] Error boundaries implemented
+- [ ] Loading states included
+- [ ] Responsive design tested
+- [ ] Performance optimized
+- [ ] Tests written
+- [ ] Documentation updated
+```
+
+---
+
+## 🎨 Styling Shortcuts
+
+### Rule 22: Common Pattern Classes
+```typescript
+// ✅ YOLO MODE: Use these pre-defined class combinations
+
+export const YOLO_PATTERNS = {
+  // Page layouts
+  fullHeight: "min-h-screen",
+  centerPage: "min-h-screen flex items-center justify-center",
+  
+  // Modern cards
+  glassCard: "bg-white/10 backdrop-blur-xl border border-white/20 rounded-2xl shadow-xl",
+  gradientCard: "bg-gradient-to-br from-purple-900/50 to-blue-900/50 backdrop-blur-xl border border-purple-500/20 rounded-2xl",
+  
+  // Interactive elements
+  hoverLift: "transition-all duration-300 hover:scale-105 hover:shadow-2xl",
+  hoverGlow: "transition-all duration-300 hover:shadow-lg hover:shadow-purple-500/25",
+  
+  // Text gradients
+  gradientText: "bg-gradient-to-r from-purple-400 to-blue-400 bg-clip-text text-transparent",
+  heroGradient: "bg-gradient-to-r from-white via-purple-200 to-blue-200 bg-clip-text text-transparent",
+  
+  // Loading states
+  skeleton: "animate-pulse bg-gradient-to-r from-gray-300 to-gray-400 bg-[length:200%_100%]",
+  shimmer: "relative overflow-hidden before:absolute before:inset-0 before:-translate-x-full before:animate-[shimmer_2s_infinite] before:bg-gradient-to-r before:from-transparent before:via-white/10 before:to-transparent",
+} as const;
+```
+
+---
+
+## 🚨 YOLO Mode Safety Guards
+
+### Rule 23: Non-Negotiable Quality Gates
+```typescript
+// ✅ THESE MUST ALWAYS BE INCLUDED - NO EXCEPTIONS
+
+// 1. TypeScript strict mode
+"strict": true,
+"noUncheckedIndexedAccess": true,
+
+// 2. Error boundaries on all route components
+<ErrorBoundary>
+  <RouteComponent />
+</ErrorBoundary>
+
+// 3. Loading states for all async operations
+const [isLoading, setIsLoading] = useState(false);
+
+// 4. Accessibility attributes
+aria-label="..."
+aria-describedby="..."
+role="..."
+
+// 5. Performance optimization
+React.memo()
+useMemo()
+useCallback()
+lazy()
+```
+
+### Rule 24: Development Speed Multipliers
+```typescript
+// 🚀 YOLO SPEED HACKS
+
+// 1. Component scaffolding command
+const createComponent = (name: string) => `
+import { cn } from '@/lib/utils';
+import type { ComponentProps } from '@/types';
+
+interface ${name}Props extends ComponentProps {
+  variant?: 'default' | 'large';
+}
+
+const ${name}: React.FC<${name}Props> = ({ className, variant = 'default', ...props }) => {
+  return (
+    <div className={cn('', className)} {...props}>
+      {/* Component content */}
+    </div>
+  );
+};
+
+export default ${name};
+`;
+
+// 2. Hook scaffolding
+const createHook = (name: string) => `
+import { useState, useEffect } from 'react';
+
+interface Use${name}Return {
+  data: any;
+  loading: boolean;
+  error: Error | null;
+}
+
+const use${name} = (): Use${name}Return => {
+  const [data, setData] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<Error | null>(null);
+
+  return { data, loading, error };
+};
+
+export default use${name};
+`;
+
+// 3. API route scaffolding
+const createAPIRoute = (name: string) => `
+import { NextRequest, NextResponse } from 'next/server';
+import { z } from 'zod';
+
+const schema = z.object({
+  // Define schema
+});
+
+export async function POST(request: NextRequest) {
+  try {
+    const body = await request.json();
+    const validated = schema.parse(body);
+    
+    // Implementation
+    
+    return NextResponse.json({ success: true });
+  } catch (error) {
+    return NextResponse.json(
+      { error: 'Internal server error' },
+      { status: 500 }
+    );
+  }
+}
+`;
+```
+
+---
+
+## 🎯 Final YOLO Mode Commands
+
+### Rule 25: Instant Development Commands
+```bash
+# 🚀 Copy-paste these for instant setup
+
+# Create new component
+npx create-component ComponentName --template=modern
+
+# Create new hook  
+npx create-hook useHookName --template=async
+
+# Create new page section
+npx create-section SectionName --with-animation
+
+# Run full quality check
+npm run yolo:check # (lint + test + type-check + a11y)
+
+# Build and analyze
+npm run yolo:build # (build + analyze + perf-check)
+```
+
+### Rule 26: Emergency Debug Mode
+```typescript
+// 🚨 EMERGENCY DEBUGGING - Use when things break
+
+// 1. Component Debug Wrapper
+const DebugWrapper = ({ children, label }: { children: React.ReactNode; label: string }) => {
+  useEffect(() => {
+    console.log(`🚀 ${label} mounted`);
+    return () => console.log(`💀 ${label} unmounted`);
+  }, [label]);
+
+  return (
+    <div data-debug={label} style={{ border: '2px solid red' }}>
+      {children}
+    </div>
+  );
+};
+
+// 2. Hook Debug Logger
+const useDebugValue = (value: any, label: string) => {
+  useEffect(() => {
+    console.log(`🔍 ${label}:`, value);
+  }, [value, label]);
+};
+
+// 3. Performance Debug
+const usePerformanceDebug = (componentName: string) => {
+  useEffect(() => {
+    const start = performance.now();
+    return () => {
+      const end = performance.now();
+      console.log(`⚡ ${componentName} render time: ${end - start}ms`);
+    };
+  });
+};
+```
+
+---
+
+## 📋 YOLO Mode Checklist
+
+Before shipping any component, verify:
+
+### ✅ Code Quality
+- [ ] TypeScript interfaces defined
+- [ ] No `any` types used
+- [ ] Error handling implemented
+- [ ] Loading states included
+
+### ✅ Design System
+- [ ] Colors from design tokens
+- [ ] Typography scale followed
+- [ ] Spacing system used
+- [ ] Animation standards applied
+
+### ✅ Performance
+- [ ] Components memoized where needed
+- [ ] Images optimized
+- [ ] Bundle size checked
+- [ ] Core Web Vitals considered
+
+### ✅ Accessibility
+- [ ] Semantic HTML used
+- [ ] ARIA labels included
+- [ ] Keyboard navigation works
+- [ ] Color contrast verified
+
+### ✅ Testing
+- [ ] Unit tests written
+- [ ] Integration tests added
+- [ ] Accessibility tests included
+- [ ] Manual testing completed
+
+---
+
+## 🎉 YOLO Mode Success Metrics
+
+Track these to ensure YOLO mode effectiveness:
+
+- **Development Speed**: Components per hour
+- **Code Quality**: TypeScript coverage, lint errors
+- **Performance**: Bundle size, Core Web Vitals
+- **Accessibility**: aXe violations, WCAG compliance
+- **User Experience**: Conversion rates, engagement metrics
+
+---
+
+> **Remember**: YOLO mode is about moving fast while maintaining quality. These rules ensure you can develop rapidly without sacrificing the enterprise-grade standards required for Konversly AI's landing page.
+
+🚀 **Happy coding in YOLO mode!**
