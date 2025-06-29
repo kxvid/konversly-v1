@@ -430,8 +430,8 @@ SidebarGroup.displayName = "SidebarGroup"
 
 const SidebarGroupLabel = React.forwardRef<
   HTMLDivElement,
-  React.ComponentProps<"div"> & { asChild?: boolean }
->(({ className, asChild = false, ...props }, ref) => {
+  Omit<React.ComponentProps<"div">, "ref"> & { asChild?: boolean }
+>(({ className, asChild = false, ...props }, ref: React.Ref<HTMLDivElement>) => {
   const Comp = asChild ? Slot : "div"
 
   return (
@@ -451,8 +451,8 @@ SidebarGroupLabel.displayName = "SidebarGroupLabel"
 
 const SidebarGroupAction = React.forwardRef<
   HTMLButtonElement,
-  React.ComponentProps<"button"> & { asChild?: boolean }
->(({ className, asChild = false, ...props }, ref) => {
+  Omit<React.ComponentProps<"button">, "ref"> & { asChild?: boolean }
+>(({ className, asChild = false, ...props }, ref: React.Ref<HTMLButtonElement>) => {
   const Comp = asChild ? Slot : "button"
 
   return (
@@ -535,7 +535,7 @@ const sidebarMenuButtonVariants = cva(
 
 const SidebarMenuButton = React.forwardRef<
   HTMLButtonElement,
-  React.ComponentProps<"button"> & {
+  Omit<React.ComponentProps<"button">, "ref"> & {
     asChild?: boolean
     isActive?: boolean
     tooltip?: string | React.ComponentProps<typeof TooltipContent>
@@ -551,7 +551,7 @@ const SidebarMenuButton = React.forwardRef<
       className,
       ...props
     },
-    ref
+    ref: React.Ref<HTMLButtonElement>
   ) => {
     const Comp = asChild ? Slot : "button"
     const { isMobile, state } = useSidebar()
@@ -594,11 +594,11 @@ SidebarMenuButton.displayName = "SidebarMenuButton"
 
 const SidebarMenuAction = React.forwardRef<
   HTMLButtonElement,
-  React.ComponentProps<"button"> & {
+  Omit<React.ComponentProps<"button">, "ref"> & {
     asChild?: boolean
     showOnHover?: boolean
   }
->(({ className, asChild = false, showOnHover = false, ...props }, ref) => {
+>(({ className, asChild = false, showOnHover = false, ...props }, ref: React.Ref<HTMLButtonElement>) => {
   const Comp = asChild ? Slot : "button"
 
   return (
@@ -707,12 +707,12 @@ SidebarMenuSubItem.displayName = "SidebarMenuSubItem"
 
 const SidebarMenuSubButton = React.forwardRef<
   HTMLAnchorElement,
-  React.ComponentProps<"a"> & {
+  Omit<React.ComponentProps<"a">, "ref"> & {
     asChild?: boolean
     size?: "sm" | "md"
     isActive?: boolean
   }
->(({ asChild = false, size = "md", isActive, className, ...props }, ref) => {
+>(({ asChild = false, size = "md", isActive, className, ...props }, ref: React.Ref<HTMLAnchorElement>) => {
   const Comp = asChild ? Slot : "a"
 
   return (
@@ -734,6 +734,31 @@ const SidebarMenuSubButton = React.forwardRef<
   )
 })
 SidebarMenuSubButton.displayName = "SidebarMenuSubButton"
+
+const SidebarMenuLink = React.forwardRef<
+  HTMLAnchorElement,
+  Omit<React.ComponentProps<"a">, "ref"> & {
+    asChild?: boolean
+    isActive?: boolean
+    tooltip?: string | React.ComponentProps<typeof TooltipContent>
+  }
+>(({ asChild = false, isActive = false, tooltip, className, ...props }, ref: React.Ref<HTMLAnchorElement>) => {
+  const Comp = asChild ? Slot : "a"
+
+  return (
+    <Comp
+      ref={ref}
+      data-sidebar="menu-link"
+      data-active={isActive}
+      className={cn(
+        "flex w-full items-center gap-2 overflow-hidden rounded-md p-2 text-left text-sm outline-none ring-sidebar-ring transition-[width,height,padding] hover:bg-sidebar-accent hover:text-sidebar-accent-foreground focus-visible:ring-2 active:bg-sidebar-accent active:text-sidebar-accent-foreground disabled:pointer-events-none disabled:opacity-50 aria-disabled:pointer-events-none aria-disabled:opacity-50 data-[active=true]:bg-sidebar-accent data-[active=true]:font-medium data-[active=true]:text-sidebar-accent-foreground data-[state=open]:hover:bg-sidebar-accent data-[state=open]:hover:text-sidebar-accent-foreground group-data-[collapsible=icon]:!size-8 group-data-[collapsible=icon]:!p-2 [&>span:last-child]:truncate [&>svg]:size-4 [&>svg]:shrink-0",
+        className
+      )}
+      {...props}
+    />
+  )
+})
+SidebarMenuLink.displayName = "SidebarMenuLink"
 
 export {
   Sidebar,

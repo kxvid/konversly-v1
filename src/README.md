@@ -25,19 +25,19 @@ A beautiful, modern landing page for Konversly - an enterprise-grade AI platform
 ## Getting Started
 
 1. **Install dependencies:**
-   ```bash
-   pnpm install
-   ```
+```bash
+pnpm install
+```
 2. **Set up environment variables:**
    Create a `.env.local` file in the project root with:
-   ```env
-   OPENAI_API_KEY=your_openai_api_key_here
-   NEXT_PUBLIC_VAPI_API_KEY=your_vapi_api_key_here
-   ```
+```env
+OPENAI_API_KEY=your_openai_api_key_here
+NEXT_PUBLIC_VAPI_API_KEY=your_vapi_api_key_here
+```
 3. **Run the development server:**
-   ```bash
-   pnpm dev
-   ```
+```bash
+pnpm dev
+```
 4. **Open [http://localhost:3000](http://localhost:3000) to view the app.**
 
 ## Project Structure

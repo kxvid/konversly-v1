@@ -1,16 +1,16 @@
 "use client"
 
 import type { ReactNode } from "react"
-import { useState, useActionState } from "react"
-import { useFormStatus } from "react-dom"
+import { useState } from "react"
 import { motion } from "framer-motion"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Modal } from "@/components/ui/modal"
+import { Button } from "./ui/button"
+import { Input } from "./ui/input"
+import { Modal } from "./ui/modal"
 import { ArrowRight, Loader2, PartyPopper } from "lucide-react"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { requestDemo } from "@/app/actions/request-demo"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "./ui/select"
+import { requestDemo } from "../app/actions/request-demo"
 import { toast } from "sonner"
+import React from "react"
 
 interface Step {
   title: string
@@ -18,16 +18,15 @@ interface Step {
   content: ReactNode
 }
 
-const initialState = {
-  message: "",
-  success: false,
+interface DemoState {
+  message: string;
+  success: boolean;
 }
 
-function SubmitButton() {
-  const { pending } = useFormStatus()
+function SubmitButton({ loading }: { loading: boolean }) {
   return (
-    <Button type="submit" disabled={pending}>
-      {pending ? (
+    <Button type="submit" disabled={loading}>
+      {loading ? (
         <>
           <Loader2 className="mr-2 h-4 w-4 animate-spin" />
           Scheduling...
@@ -41,10 +40,19 @@ function SubmitButton() {
   )
 }
 
+function flattenFieldErrors(errors: any): string {
+  if (!errors || typeof errors === 'string') return errors || '';
+  return Object.values(errors)
+    .flat()
+    .filter(Boolean)
+    .join(' ');
+}
+
 export function DemoFlow({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) {
-  const [state, formAction] = useActionState(requestDemo, initialState)
+  const [state, setState] = useState<DemoState>({ message: "", success: false })
   const [currentStep, setCurrentStep] = useState(0)
   const [isSubmitted, setIsSubmitted] = useState(false)
+  const [loading, setLoading] = useState(false)
 
   const steps: Step[] = [
     {
@@ -82,7 +90,32 @@ export function DemoFlow({ isOpen, onClose }: { isOpen: boolean; onClose: () => 
       title: "Choose Your Time",
       description: "Select a convenient time for your personalized demo.",
       content: (
-        <form action={formAction} className="space-y-4">
+        <form
+          className="space-y-4"
+          onSubmit={async (e) => {
+            e.preventDefault();
+            setLoading(true);
+            const form = e.currentTarget;
+            const formData = new FormData(form);
+            const data: Record<string, string> = {};
+            formData.forEach((value, key) => {
+              data[key] = value.toString();
+            });
+            try {
+              const formDataObj = new FormData();
+              Object.entries(data).forEach(([key, value]) => formDataObj.append(key, value));
+              const result = await requestDemo(null, formDataObj);
+              setState({
+                message: flattenFieldErrors(result.message),
+                success: result.success,
+              });
+            } catch (err: any) {
+              setState({ message: err?.message || "Unknown error", success: false });
+            } finally {
+              setLoading(false);
+            }
+          }}
+        >
           <div className="grid gap-4 md:grid-cols-2">
             <div>
               <label className="text-sm text-gray-400 mb-2 block">Date</label>
@@ -106,7 +139,7 @@ export function DemoFlow({ isOpen, onClose }: { isOpen: boolean; onClose: () => 
             </div>
           </div>
           <div className="flex justify-end pt-4">
-            <SubmitButton />
+            <SubmitButton loading={loading} />
           </div>
         </form>
       ),
@@ -119,23 +152,23 @@ export function DemoFlow({ isOpen, onClose }: { isOpen: boolean; onClose: () => 
     }
   }
 
-  useState(() => {
+  React.useEffect(() => {
     if (state.success && !isSubmitted) {
       toast.success("Demo Scheduled!", {
         description: "You'll receive a confirmation email shortly.",
-      })
-      setIsSubmitted(true)
+      });
+      setIsSubmitted(true);
       setTimeout(() => {
-        onClose()
-        setCurrentStep(0)
-        setIsSubmitted(false)
-      }, 2000)
+        onClose();
+        setCurrentStep(0);
+        setIsSubmitted(false);
+      }, 2000);
     } else if (state.message && !state.success) {
       toast.error("Something went wrong", {
         description: state.message,
-      })
+      });
     }
-  }, [state, onClose, isSubmitted])
+  }, [state, onClose, isSubmitted]);
 
   if (isSubmitted) {
     return (

@@ -40,16 +40,20 @@ export async function POST(req: NextRequest) {
     const openai = createOpenAI({ apiKey: process.env.OPENAI_API_KEY })
 
     // Stream response from OpenAI
+    const userMessages: { role: "system" | "user" | "assistant"; content: string }[] = parsed.data.messages.map((m: any) => ({
+      role: m.role,
+      content: m.content
+    }));
+    const messages: { role: "system" | "user" | "assistant"; content: string }[] = [
+      {
+        role: "system",
+        content: "You are Konversly, an enterprise AI assistant. Respond with clarity, professionalism, and actionable insight."
+      },
+      ...userMessages
+    ];
     const result = await streamText({
       model: openai("gpt-3.5-turbo"),
-      messages: [
-        {
-          role: "system",
-          content:
-            "You are Konversly, an enterprise AI assistant. Respond with clarity, professionalism, and actionable insight."
-        },
-        ...parsed.data.messages
-      ]
+      messages
     })
 
     return new Response(result.textStream, {

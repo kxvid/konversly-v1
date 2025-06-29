@@ -16,7 +16,11 @@ interface Transcript {
   speaker: string
 }
 
-export const VoiceAssistant: React.FC = () => {
+interface VoiceAssistantProps {
+  onTimeElapsed?: () => void
+}
+
+export const VoiceAssistant: React.FC<VoiceAssistantProps> = ({ onTimeElapsed }) => {
   const [isListening, setIsListening] = useState(false)
   const [transcript, setTranscript] = useState<Transcript[]>([])
   const [error, setError] = useState<string | null>(null)
@@ -86,7 +90,7 @@ export const VoiceAssistant: React.FC = () => {
           <div className="flex items-center gap-3 mb-4">
             <Bot className="text-accent-aurora1" aria-hidden="true" />
             <h2 className="font-bold text-lg text-primary-300">Voice Assistant</h2>
-          </div>
+        </div>
           <div
             ref={transcriptRef}
             className="h-32 overflow-y-auto bg-black/10 rounded p-2 mb-4 text-primary-200 text-sm"
@@ -100,8 +104,8 @@ export const VoiceAssistant: React.FC = () => {
                   <span className="font-semibold text-accent-aurora2">{t.speaker}:</span> {t.text}
                 </div>
               ))
-            )}
-          </div>
+        )}
+      </div>
           {error && (
             <div className="flex items-center gap-2 text-red-500 mb-2">
               <AlertTriangle className="w-4 h-4" />
@@ -109,7 +113,7 @@ export const VoiceAssistant: React.FC = () => {
             </div>
           )}
           <div className="flex gap-2">
-            <Button
+        <Button
               onClick={isListening ? stopCall : startCall}
               variant={isListening ? "secondary" : "default"}
               aria-label={isListening ? "Stop voice assistant" : "Start voice assistant"}
@@ -118,7 +122,7 @@ export const VoiceAssistant: React.FC = () => {
             >
               {isListening ? <MicOff /> : <Mic />}
               {isListening ? "Stop" : "Start"}
-            </Button>
+        </Button>
             <Button
               onClick={() => setTranscript([])}
               variant="secondary"
@@ -130,9 +134,9 @@ export const VoiceAssistant: React.FC = () => {
               Clear
             </Button>
           </div>
-        </Card>
-      </motion.div>
-    </AnimatePresence>
+              </Card>
+            </motion.div>
+        </AnimatePresence>
   )
 }
 

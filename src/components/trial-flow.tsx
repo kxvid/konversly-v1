@@ -1,40 +1,30 @@
 "use client"
 
-import { useState, useEffect, useActionState } from "react"
-import { useFormStatus } from "react-dom"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Modal } from "@/components/ui/modal"
+import { useState, useEffect } from "react"
+import { Button } from "./ui/button"
+import { Input } from "./ui/input"
+import { Modal } from "./ui/modal"
 import { ArrowRight, Loader2, PartyPopper } from "lucide-react"
-import { startTrial } from "@/app/actions/start-trial"
+import { startTrial } from "../app/actions/start-trial"
 import { toast } from "sonner"
 
-const initialState = {
-  message: "",
-  success: false,
+interface TrialState {
+  message: string;
+  success: boolean;
 }
 
-function SubmitButton() {
-  const { pending } = useFormStatus()
-  return (
-    <Button type="submit" className="w-full" disabled={pending}>
-      {pending ? (
-        <>
-          <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-          Starting Trial...
-        </>
-      ) : (
-        <>
-          Start Free Trial <ArrowRight className="ml-2 h-4 w-4" />
-        </>
-      )}
-    </Button>
-  )
+function flattenFieldErrors(errors: any): string {
+  if (!errors || typeof errors === 'string') return errors || '';
+  return Object.values(errors)
+    .flat()
+    .filter(Boolean)
+    .join(' ');
 }
 
 export function TrialFlow({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) {
-  const [state, formAction] = useActionState(startTrial, initialState)
+  const [state, setState] = useState<TrialState>({ message: "", success: false })
   const [isSubmitted, setIsSubmitted] = useState(false)
+  const [loading, setLoading] = useState(false)
 
   useEffect(() => {
     if (state.success && !isSubmitted) {
@@ -73,13 +63,49 @@ export function TrialFlow({ isOpen, onClose }: { isOpen: boolean; onClose: () =>
           <h3 className="text-2xl font-bold">Start Your Free Trial</h3>
           <p className="text-gray-400">No credit card required. Instantly access the platform.</p>
         </div>
-        <form action={formAction} className="space-y-4">
+        <form
+          className="space-y-4"
+          onSubmit={async (e) => {
+            e.preventDefault();
+            setLoading(true);
+            const form = e.currentTarget;
+            const formData = new FormData(form);
+            const data: Record<string, string> = {};
+            formData.forEach((value, key) => {
+              data[key] = value.toString();
+            });
+            try {
+              const formDataObj = new FormData();
+              Object.entries(data).forEach(([key, value]) => formDataObj.append(key, value));
+              const result = await startTrial(null, formDataObj);
+              setState({
+                message: flattenFieldErrors(result.message),
+                success: result.success,
+              });
+            } catch (err: any) {
+              setState({ message: err?.message || "Unknown error", success: false });
+            } finally {
+              setLoading(false);
+            }
+          }}
+        >
           <Input name="name" placeholder="Full Name" required />
           <Input name="email" type="email" placeholder="Work Email" required />
           <Input name="company" placeholder="Company Name" required />
           <Input name="role" placeholder="Your Role" required />
           <div className="pt-4">
-            <SubmitButton />
+            <Button type="submit" className="w-full" disabled={loading}>
+              {loading ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  Starting Trial...
+                </>
+              ) : (
+                <>
+                  Start Free Trial <ArrowRight className="ml-2 h-4 w-4" />
+                </>
+              )}
+            </Button>
           </div>
         </form>
       </div>
